@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Gummy Tier</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #FFFFFF;
+  color: #1B3A2F;
+}
+.widget {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 20px 32px;
+}
+.widget-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1B3A2F;
+  text-align: center;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.widget-sub {
+  font-size: 14px;
+  color: #7A8B82;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.vibe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.vibe-card {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(27,58,47,0.15);
+  border-radius: 14px;
+  padding: 20px 12px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, transform 0.12s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.vibe-card:hover { border-color: #1B3A2F; background: #F8F6F2; }
+.vibe-card:active { transform: scale(0.97); }
+.vibe-card.selected { border-color: #1B3A2F; background: #1B3A2F; }
+.vibe-card.selected .vibe-label { color: #FFFFFF; }
+.vibe-card.selected .vibe-desc { color: rgba(255,255,255,0.72); }
+.vibe-icon { font-size: 28px; display: block; margin-bottom: 8px; line-height: 1; }
+.vibe-label { font-size: 14px; font-weight: 700; color: #1B3A2F; display: block; margin-bottom: 4px; letter-spacing: 0.2px; }
+.vibe-desc { font-size: 12px; color: #7A8B82; line-height: 1.4; display: block; }
+.result-panel {
+  background: #F8F6F2;
+  border: 1.5px solid rgba(27,58,47,0.12);
+  border-radius: 14px;
+  padding: 20px 20px 18px;
+  transition: opacity 0.22s;
+  opacity: 0;
+  pointer-events: none;
+}
+.result-panel.visible { opacity: 1; pointer-events: auto; }
+.result-tier {
+  display: inline-block;
+  background: #1B3A2F;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.result-heading { font-size: 16px; font-weight: 700; color: #1B3A2F; margin-bottom: 6px; }
+.result-copy { font-size: 13px; color: #4A5D53; line-height: 1.6; margin-bottom: 12px; }
+.product-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.product-pill {
+  display: inline-block;
+  background: #FFFFFF;
+  border: 1px solid rgba(27,58,47,0.18);
+  border-radius: 20px;
+  font-size: 11px;
+  color: #1B3A2F;
+  padding: 4px 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.result-cta {
+  display: inline-block;
+  background: #D4A04A;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: 20px;
+  transition: background 0.15s;
+  letter-spacing: 0.2px;
+}
+.result-cta:hover { background: #b8882e; }
+.reset-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #7A8B82;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 14px;
+  cursor: pointer;
+  padding: 4px;
+  font-family: inherit;
+}
+.reset-btn:hover { color: #1B3A2F; }
+@media (max-width: 380px) {
+  .vibe-icon { font-size: 22px; }
+  .vibe-label { font-size: 12px; }
+  .vibe-desc { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+ 
+<div class="widget" id="widget">
+  <h2 class="widget-heading">Find your gummy tier</h2>
+  <p class="widget-sub">Pick the vibe you're going for</p>
+ 
+  <div class="vibe-grid">
+    <div class="vibe-card" data-vibe="mellow" role="button" tabindex="0" aria-label="Mellow">
+      <span class="vibe-icon">🌿</span>
+      <span class="vibe-label">Mellow</span>
+      <span class="vibe-desc">Easy, everyday, no fuss</span>
+    </div>
+    <div class="vibe-card" data-vibe="curated" role="button" tabindex="0" aria-label="Curated">
+      <span class="vibe-icon">✨</span>
+      <span class="vibe-label">Curated</span>
+      <span class="vibe-desc">A little more intention</span>
+    </div>
+    <div class="vibe-card" data-vibe="elevated" role="button" tabindex="0" aria-label="Elevated">
+      <span class="vibe-icon">🍄</span>
+      <span class="vibe-label">Elevated</span>
+      <span class="vibe-desc">Next-level, full send</span>
+    </div>
+  </div>
+ 
+  <div class="result-panel" id="result" role="region" aria-live="polite">
+    <span class="result-tier" id="result-tier"></span>
+    <p class="result-heading" id="result-heading"></p>
+    <p class="result-copy" id="result-copy"></p>
+    <div class="product-pills" id="result-pills"></div>
+    <a class="result-cta" id="result-cta" href="#" target="_blank" rel="noopener">Shop this tier</a>
+    <button class="reset-btn" id="reset-btn">Start over</button>
+  </div>
+</div>
+ 
+<script>
+var results = {
+  mellow: {
+    tier: "Basic Gummies",
+    heading: "Simple, clean, and effective",
+    copy: "Straightforward Delta-9 THC with nothing extra. Great for new users or whenever you just want a clean, no-frills experience. From $19.",
+    products: ["15mg Delta-9 THC Gummies", "Micro-Dose Delta-9", "Sleep Gummies", "Rapid Onset Delta-9", "50mg Delta-8 Gummies"],
+    cta: "Shop Basic Gummies",
+    url: "https://mood.com/shop/product-category/gummies/basic"
+  },
+  curated: {
+    tier: "Premium Gummies",
+    heading: "THC with a purpose",
+    copy: "Delta-9 THC paired with curated supporting ingredients. Every gummy here is built around a specific experience. From $35.",
+    products: ["Immune Support THC Gummies", "Testosterone Support THC Gummies", "Sleep Gummies - Melatonin Free"],
+    cta: "Shop Premium Gummies",
+    url: "https://mood.com/shop/product-category/gummies/premium"
+  },
+  elevated: {
+    tier: "Premium Max Gummies",
+    heading: "The full experience",
+    copy: "Specialty cannabinoid blends with functional mushrooms and nootropics. Built for people who know exactly what they want. From $35.",
+    products: ["Hero Dose Rapid Onset", "Epic Euphoria", "Mind Magic", "Sexual Euphoria", "30mg Delta-9 THC Gummies"],
+    cta: "Shop Premium Max Gummies",
+    url: "https://mood.com/shop/product-category/gummies/premium-max"
+  }
+};
+ 
+var cards = document.querySelectorAll('.vibe-card');
+var panel = document.getElementById('result');
+var tierEl = document.getElementById('result-tier');
+var headingEl = document.getElementById('result-heading');
+var copyEl = document.getElementById('result-copy');
+var pillsEl = document.getElementById('result-pills');
+var ctaEl = document.getElementById('result-cta');
+var resetBtn = document.getElementById('reset-btn');
+ 
+function selectVibe(vibe) {
+  cards.forEach(function(c) { c.classList.toggle('selected', c.dataset.vibe === vibe); });
+  var r = results[vibe];
+  tierEl.textContent = r.tier;
+  headingEl.textContent = r.heading;
+  copyEl.textContent = r.copy;
+  ctaEl.textContent = r.cta;
+  ctaEl.href = r.url;
+  pillsEl.innerHTML = '';
+  r.products.forEach(function(name) {
+    var pill = document.createElement('span');
+    pill.className = 'product-pill';
+    pill.textContent = name;
+    pillsEl.appendChild(pill);
+  });
+  panel.classList.add('visible');
+  sendHeight();
+}
+ 
+function reset() {
+  cards.forEach(function(c) { c.classList.remove('selected'); });
+  panel.classList.remove('visible');
+  sendHeight();
+}
+ 
+cards.forEach(function(card) {
+  card.addEventListener('click', function() { selectVibe(this.dataset.vibe); });
+  card.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectVibe(this.dataset.vibe); }
+  });
+});
+ 
+resetBtn.addEventListener('click', reset);
+ 
+function sendHeight() {
+  setTimeout(function() {
+    var h = document.getElementById('widget').scrollHeight + 16;
+    window.parent.postMessage({ type: 'iframeHeight', height: h }, '*');
+  }, 50);
+}
+ 
+sendHeight();
+window.addEventListener('resize', sendHeight);
+</script>
+</body>
+</html>
